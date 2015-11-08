@@ -1,0 +1,6 @@
+  b:= bat.new(:oid,:int);
+  bat.append(b,0);
+  (grp,ext,histo):= group.subgroup(b);
+  io.print(b);
+  io.print(histo);
+  io.print(grp);

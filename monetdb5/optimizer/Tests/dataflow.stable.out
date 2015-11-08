@@ -1,0 +1,102 @@
+stdout of test 'dataflow` in directory 'monetdb5/optimizer` itself:
+
+
+# 18:05:39 >  
+# 18:05:39 >   mserver5  --debug=10 --set gdk_nr_threads=0  --set "gdk_dbfarm=/ufs/mk/Aug2011//Linux/var/MonetDB" --set mapi_open=true --set mapi_port=32759 --set monet_prompt= --trace --forcemito --set mal_listing=2  --dbname=mTests_optimizer  dataflow.mal
+# 18:05:39 >  
+
+# MonetDB 5 server v11.5.0
+# This is an unreleased version
+# Serving database 'mTests_optimizer', using 4 threads
+# Compiled for x86_64-unknown-linux-gnu/64bit with 64bit OIDs dynamically linked
+# Found 7.749 GiB available main-memory.
+# Copyright (c) 1993-July 2008 CWI.
+# Copyright (c) August 2008-2015 MonetDB B.V., all rights reserved
+# Visit http://monetdb.cwi.nl/ for further information
+# Listening for connection requests on mapi:monetdb://eir.ins.cwi.nl:32759/
+# MonetDB/GIS module loaded
+# MonetDB/SQL module loaded
+# SQLException:mvc:SQL module not initialized
+function user.tst():void;
+    s := microbenchmark.uniform(0@0:oid,10000000:wrd,10000000);
+    l := aggr.min(s);
+    h := l;
+#mdb.setTimer(true); 
+#mdb.setThread(true); 
+    z := nil:bat[:oid,:int];
+barrier go := language.dataflow();
+    t1 := algebra.select(s,l,h);
+    t2 := algebra.select(s,l,h);
+    t3 := algebra.select(s,l,h);
+    t4 := algebra.select(s,l,h);
+    t5 := algebra.select(s,l,h);
+    t6 := algebra.select(s,l,h);
+    t7 := algebra.select(s,l,h);
+    t8 := algebra.select(s,l,h);
+    z := mat.pack(t1,t2,t3,t4,t5,t6,t7,t8);
+exit go;
+    mdb.var();
+    c := aggr.count(z);
+    io.print(c);
+    io.print("done");
+end user.tst;
+function user.main():void;
+# a simple dataflow test 
+    mdb.List("user","tst");
+    user.tst();
+end user.main;
+function user.tst():void;               	# 
+    s:bat[:oid,:int] := microbenchmark.uniform(0@0:oid,10000000:wrd,10000000:int);	# MBMuniform
+    l:int := aggr.min(s:bat[:oid,:int]);	# ALGminany
+    h:int := l:int;                     	# 
+#mdb.setTimer(true);                    	# 
+#mdb.setThread(true);                   	# 
+    z:bat[:oid,:int] := nil:bat[:oid,:int];	# 
+barrier go:bit := language.dataflow();  	# MALstartDataflow
+    t1:bat[:oid,:int] := algebra.select(s:bat[:oid,:int],l:int,h:int);	# ALGselect
+    t2:bat[:oid,:int] := algebra.select(s:bat[:oid,:int],l:int,h:int);	# ALGselect
+    t3:bat[:oid,:int] := algebra.select(s:bat[:oid,:int],l:int,h:int);	# ALGselect
+    t4:bat[:oid,:int] := algebra.select(s:bat[:oid,:int],l:int,h:int);	# ALGselect
+    t5:bat[:oid,:int] := algebra.select(s:bat[:oid,:int],l:int,h:int);	# ALGselect
+    t6:bat[:oid,:int] := algebra.select(s:bat[:oid,:int],l:int,h:int);	# ALGselect
+    t7:bat[:oid,:int] := algebra.select(s:bat[:oid,:int],l:int,h:int);	# ALGselect
+    t8:bat[:oid,:int] := algebra.select(s:bat[:oid,:int],l:int,h:int);	# ALGselect
+    z:bat[:oid,:int] := mat.pack(t1:bat[:oid,:int],t2:bat[:oid,:int],t3:bat[:oid,:int],t4:bat[:oid,:int],t5:bat[:oid,:int],t6:bat[:oid,:int],t7:bat[:oid,:int],t8:bat[:oid,:int]);	# MATpack
+exit go:bit;                            	# 
+    s:bat[:oid,:int] := nil:bat[:oid,:int];	# 
+    mdb.var();                          	# MDBvar
+    c:wrd := aggr.count(z:bat[:oid,:int]);	# ALGcount_bat
+    io.print(c:wrd);                    	# IOprint_val
+    io.print("done":str);               	# IOprint_val
+end user.tst;                           	# 
+#Stack 'tst' size=32 top=27
+#[1]     s = nil :bat[:oid,:int]   eolife=18 
+#[2]    _2 = 0@0 :oid  constant 
+#[3]    _3 = 10000000 :wrd  constant 
+#[4]    _4 = 10000000 :int  constant 
+#[5]     l = 0 :int  
+#[6]     h = 0 :int  
+#[9]     z = <tmp_160> :bat[:void,:int] rows=8   eolife=20 
+#[10]   _10 = nil :bat[:oid,:int]  constant  eolife=6 
+#[11]    go = false :bit  
+#[12]    t1 = nil :bat[:oid,:int]   eolife=16 
+#[13]    t2 = nil :bat[:oid,:int]   eolife=16 
+#[14]    t3 = nil :bat[:oid,:int]   eolife=16 
+#[15]    t4 = nil :bat[:oid,:int]   eolife=16 
+#[16]    t5 = nil :bat[:oid,:int]   eolife=16 
+#[17]    t6 = nil :bat[:oid,:int]   eolife=16 
+#[18]    t7 = nil :bat[:oid,:int]   eolife=16 
+#[19]    t8 = nil :bat[:oid,:int]   eolife=16 
+#[21]     c = 0 :wrd  
+#[24]   _24 = "done" :str  constant 
+#[26]   _26 = nil :bat[:oid,:int]  constant 
+[ 8 ]
+
+[ "done" ]
+
+
+
+# 18:05:41 >  
+# 18:05:41 >  Done.
+# 18:05:41 >  
+

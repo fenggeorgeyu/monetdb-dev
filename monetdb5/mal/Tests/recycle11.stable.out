@@ -1,0 +1,135 @@
+stdout of test 'recycle11` in directory 'monetdb5/mal` itself:
+
+
+# 13:47:51 >  
+# 13:47:51 >   mserver5 "--config=/export/scratch1/milena/monet.DBG/etc/monetdb5.conf" --debug=10 --set gdk_nr_threads=0 --set "monet_mod_path=/export/scratch1/milena/monet.DBG/lib/MonetDB5:/export/scratch1/milena/monet.DBG/lib/MonetDB5/lib:/export/scratch1/milena/monet.DBG/lib/MonetDB5/bin" --set "gdk_dbfarm=/export/scratch1/milena/monet.DBG/var/MonetDB5/dbfarm" --set "sql_logdir=/export/scratch1/milena/monet.DBG/var/MonetDB5/sql_logs"  --set mapi_open=true --set xrpc_open=true --set mapi_port=35909 --set xrpc_port=47862 --set monet_prompt= --trace  --dbname=mTests_src_mal  recycle11.mal
+# 13:47:51 >  
+
+# MonetDB server v5.7.0, based on kernel v1.25.0
+# Serving database 'mTests_src_mal', using 4 threads
+# Compiled for x86_64-unknown-linux-gnu/64bit with 64bit OIDs dynamically linked
+# Found 15.591 GiB available main-memory.
+# Copyright (c) 1993-July 2008 CWI.
+# Copyright (c) August 2008-2015 MonetDB B.V., all rights reserved
+# Visit http://www.monetdb.org/ for further information
+# Listening for connection requests on mapi:monetdb://vienna.ins.cwi.nl:35049/
+# Listening for UNIX domain connection requests on mapi:monetdb:///var/tmp/mtest-25339/.s.monetdb.35049
+# MonetDB/GIS module loaded
+# MonetDB/JAQL module loaded
+# MonetDB/SQL module loaded
+function sql.mvc():int;
+    return mvc := 1;
+end sql.mvc;
+function sql.tid(mvc:int,s:str,t:str):bat[:oid,:oid];
+    b := bat.new(:oid,:oid);
+barrier i := 0@0:oid;
+    bat.append(b,i);
+    redo i := iterator.next(1@0:oid,11@0:oid);
+exit i;
+    return tid := b;
+end sql.tid;
+function sql.bind(mvc:int,s:str,t:str,c:str,i:int):bat[:oid,:int];
+    b := bat.new(:oid,:int);
+    bat.append(b,0);
+    bat.append(b,1);
+    bat.append(b,2);
+    bat.append(b,3);
+    bat.append(b,4);
+    bat.append(b,5);
+    bat.append(b,6);
+    bat.append(b,7);
+    bat.append(b,8);
+    bat.append(b,9);
+    bat.append(b,10);
+    bat.append(b,11);
+    return bind := b;
+end sql.bind;
+function sql.qry(low:int,hgh:int):void;
+    m := sql.mvc();
+    x:bat[:oid,:oid]  := sql.tid(m,"sys","tbl");
+    b:bat[:oid,:int]  := sql.bind(m,"sys","tbl","col",0);
+    s1 := algebra.subselect(b,x,low,hgh,true,true,false);
+    v := calc.+(low,hgh);
+    v1 := calc./(v,2);
+    v2 := calc.int(v1);
+    l2 := calc.+(low,2);
+    h2 := calc.-(hgh,2);
+    s2 := algebra.subselect(b,x,v2,v2,true,true,false);
+    s3 := algebra.subselect(b,x,l2,h2,true,true,false);
+    s4 := algebra.subselect(b,x,l2,hgh,true,false,false);
+    io.print(s1);
+    io.print(s2);
+    io.print(s3);
+    io.print(s4);
+end sql.qry;
+function user.main():void;
+#test the basics of the recycler 
+# testing reuse-cover with different selection instructions 
+    user.qry(1,9);
+    recycle.dump();
+end user.main;
+#RECYCLE [  0] cost 8 mem 0 srch  -nan     X_0:int  := sql.mvc();
+#RECYCLE [  1] cost 108 mem 88 srch 42.00     X_3:BAT  := sql.tid(X_0=1,X_2="sys",X_1="tbl");
+#RECYCLE [  2] cost 78 mem 48 srch 45.50     X_6:BAT  := sql.bind(X_0=1,X_2="sys",X_1="tbl",X_5="col",X_4=0);
+#RECYCLE [  3] cost 20 mem 0 srch 46.33     X_10:BAT  := algebra.subselect(X_6=<tmp_1045>,X_3=<tmp_1032>,X_0=1,X_9=9,X_8=true,X_8=true,X_7=false);
+#RECYCLE [  4] cost 19 mem 0 srch 46.75     X_11:int  := calc.+(X_0=1,X_9=9);
+#RECYCLE [  5] cost 17 mem 0 srch 45.80     X_13:int  := calc./(X_11=10,X_12=2);
+#RECYCLE [  6] cost 4 mem 0 srch 43.67     X_14:int  := calc.int(X_13=5);
+#RECYCLE [  7] cost 4 mem 0 srch 50.14     X_15:int  := calc.+(X_0=1,X_12=2);
+#RECYCLE [  8] cost 18 mem 0 srch 47.88     X_16:int  := calc.-(X_9=9,X_12=2);
+#RECYCLE [  9] cost 17 mem 0 srch 45.89     X_17:BAT  := algebra.subselect(X_6=<tmp_1045>,X_10=<tmp_1044>,X_14=5,X_14=5,X_8=true,X_8=true,X_7=false);
+#REUSED  [  3]  20 (usec)     X_10:BAT  := algebra.subselect(X_6=<tmp_1045>,X_3=<tmp_1032>,X_0=1,X_9=9,X_8=true,X_8=true,X_7=false);
+#RECYCLE [ 10] cost 15 mem 0 srch 45.60     X_18:BAT  := algebra.subselect(X_6=<tmp_1045>,X_10=<tmp_1044>,X_15=3,X_16=7,X_8=true,X_8=true,X_7=false);
+#REUSED  [  3]  20 (usec)     X_10:BAT  := algebra.subselect(X_6=<tmp_1045>,X_3=<tmp_1032>,X_0=1,X_9=9,X_8=true,X_8=true,X_7=false);
+#RECYCLE [ 11] cost 29 mem 0 srch 45.36     X_19:BAT  := algebra.subselect(X_6=<tmp_1045>,X_10=<tmp_1044>,X_15=3,X_9=9,X_8=true,X_7=false,X_7=false);
+#REUSED  [  3]  20 (usec)     X_10:BAT  := algebra.subselect(X_6=<tmp_1045>,X_3=<tmp_1032>,X_0=1,X_9=9,X_8=true,X_8=true,X_7=false);
+#--------------------------#
+# t	h  # name
+# void	oid  # type
+#--------------------------#
+[ 0@0,	1@0  ]
+[ 1@0,	2@0  ]
+[ 2@0,	3@0  ]
+[ 3@0,	4@0  ]
+[ 4@0,	5@0  ]
+[ 5@0,	6@0  ]
+[ 6@0,	7@0  ]
+[ 7@0,	8@0  ]
+[ 8@0,	9@0  ]
+#--------------------------#
+# t	h  # name
+# void	oid  # type
+#--------------------------#
+[ 0@0,	5@0  ]
+#--------------------------#
+# t	h  # name
+# void	oid  # type
+#--------------------------#
+[ 0@0,	3@0  ]
+[ 1@0,	4@0  ]
+[ 2@0,	5@0  ]
+[ 3@0,	6@0  ]
+[ 4@0,	7@0  ]
+#--------------------------#
+# t	h  # name
+# void	oid  # type
+#--------------------------#
+[ 0@0,	3@0  ]
+[ 1@0,	4@0  ]
+[ 2@0,	5@0  ]
+[ 3@0,	6@0  ]
+[ 4@0,	7@0  ]
+[ 5@0,	8@0  ]
+#RECYCLER CATALOG cache limit= 5000 cached 12 memory 16741163008 
+#MAL recycled = 9 savings= 0(usec) total MAL executed = 1535 memory(KB)= 496 searchtime=1(usec)
+# CL	   lru		cnt	 ticks	 rd	 wr	 Instr
+#        1	400914	1	69	1	1	    _1 := user.bind("schema","table","column",0);
+#        2	401021	4	49	1	1	    _6 := algebra.select(<tmp_20>,1,9,false,false);
+#        3	400993	1	21	1	1	    _10 := algebra.select(<tmp_20>,5);
+#        4	401010	1	16	1	1	    _12 := algebra.select(<tmp_20>,3,7);
+#        5	401027	1	15	1	1	    _15 := algebra.select(<tmp_20>,3,9,true,false);
+
+# 13:47:51 >  
+# 13:47:51 >  Done.
+# 13:47:51 >  
+

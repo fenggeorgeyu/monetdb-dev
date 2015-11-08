@@ -1,0 +1,62 @@
+
+## Use: nmake -f makefile.msc install
+
+# Nothing much configurable below
+
+TOPDIR = .\..\..
+srcdir = $(TOPDIR)\..\clients\ruby
+!INCLUDE $(TOPDIR)\..\NT\rules.msc
+all: build-all
+check: check-recursive check-msc
+install: install-recursive install-msc
+adapter-1-all: "adapter-1-dir" "adapter-1-Makefile"
+	$(CD) "adapter" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" all 
+adapter-1-dir: 
+	if not exist "adapter" $(MKDIR) "adapter"
+adapter-1-Makefile: "$(srcdir)\adapter\Makefile.msc"
+	$(INSTALL) "$(srcdir)\adapter\Makefile.msc" "adapter\Makefile"
+adapter-1-check:
+	$(CD) "adapter" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" check
+adapter-1-install:
+	$(CD) "adapter" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" install
+all-recursive: "adapter-1-all" 
+check-recursive: "adapter-1-check" 
+install-recursive: "adapter-1-install" 
+EXTRA_DIST_DIR =  examples lib
+INCLUDES = -I$(srcdir)
+!IF defined(HAVE_RUBYGEM)
+ruby-monetdb-sql-0.1.gem: README lib/MonetDB.rb lib/MonetDBConnection.rb lib/MonetDBData.rb lib/MonetDBExceptions.rb lib/hasher.rb ruby-monetdb-sql-0.1.gemspec
+	gem build ruby-monetdb-sql-0.1.gemspec
+README: "$(srcdir)\README"
+	$(INSTALL) "$(srcdir)\README" "README"
+lib\MonetDB.rb: "$(srcdir)\lib\MonetDB.rb"
+	if not exist "lib" $(MKDIR) "lib"
+	$(INSTALL) "$(srcdir)\lib\MonetDB.rb" "lib\MonetDB.rb"
+lib\MonetDBConnection.rb: "$(srcdir)\lib\MonetDBConnection.rb"
+	if not exist "lib" $(MKDIR) "lib"
+	$(INSTALL) "$(srcdir)\lib\MonetDBConnection.rb" "lib\MonetDBConnection.rb"
+lib\MonetDBData.rb: "$(srcdir)\lib\MonetDBData.rb"
+	if not exist "lib" $(MKDIR) "lib"
+	$(INSTALL) "$(srcdir)\lib\MonetDBData.rb" "lib\MonetDBData.rb"
+lib\MonetDBExceptions.rb: "$(srcdir)\lib\MonetDBExceptions.rb"
+	if not exist "lib" $(MKDIR) "lib"
+	$(INSTALL) "$(srcdir)\lib\MonetDBExceptions.rb" "lib\MonetDBExceptions.rb"
+lib\hasher.rb: "$(srcdir)\lib\hasher.rb"
+	if not exist "lib" $(MKDIR) "lib"
+	$(INSTALL) "$(srcdir)\lib\hasher.rb" "lib\hasher.rb"
+ruby-monetdb-sql-0.1.gemspec: "$(srcdir)\ruby-monetdb-sql-0.1.gemspec"
+	$(INSTALL) "$(srcdir)\ruby-monetdb-sql-0.1.gemspec" "ruby-monetdb-sql-0.1.gemspec"
+install_ruby-monetdb-sql-0.1.gemspec: "ruby-monetdb-sql-0.1.gem" "$(prefix)\$(RUBY_DIR)"
+	gem install "ruby-monetdb-sql-0.1.gem" --local --install-dir "$(prefix)\$(RUBY_DIR)" --force --rdoc
+"$(prefix)\$(RUBY_DIR)":
+	if not exist "$(prefix)\$(RUBY_DIR)" $(MKDIR) "$(prefix)\$(RUBY_DIR)"
+!ELSE
+ruby-monetdb-sql-0.1.gem:
+install_ruby-monetdb-sql-0.1.gemspec:
+!ENDIF
+build-all: $(BUILT_SOURCES) all-recursive all-msc
+all-msc: "ruby-monetdb-sql-0.1.gem"
+check-msc: all-msc "ruby-monetdb-sql-0.1.gemspec"
+install-msc: install-exec install-data
+install-exec:  "install_ruby-monetdb-sql-0.1.gemspec" 
+install-data:

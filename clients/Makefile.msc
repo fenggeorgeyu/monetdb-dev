@@ -1,0 +1,158 @@
+
+## Use: nmake -f makefile.msc install
+
+# Nothing much configurable below
+
+TOPDIR = .\..
+srcdir = $(TOPDIR)\..\clients
+!INCLUDE $(TOPDIR)\..\NT\rules.msc
+all: build-all
+check: check-recursive check-msc
+install: install-recursive install-msc
+EXTRA_DIST_DIR =  Tests R nodejs
+INCLUDES = -I$(srcdir)
+mapilib-1-all: "mapilib-1-dir" "mapilib-1-Makefile"
+	$(CD) "mapilib" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" all 
+mapilib-1-dir: 
+	if not exist "mapilib" $(MKDIR) "mapilib"
+mapilib-1-Makefile: "$(srcdir)\mapilib\Makefile.msc"
+	$(INSTALL) "$(srcdir)\mapilib\Makefile.msc" "mapilib\Makefile"
+mapilib-1-check:
+	$(CD) "mapilib" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" check
+mapilib-1-install:
+	$(CD) "mapilib" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" install
+mapiclient-2-all: "mapiclient-2-dir" "mapiclient-2-Makefile"
+	$(CD) "mapiclient" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" all 
+mapiclient-2-dir: 
+	if not exist "mapiclient" $(MKDIR) "mapiclient"
+mapiclient-2-Makefile: "$(srcdir)\mapiclient\Makefile.msc"
+	$(INSTALL) "$(srcdir)\mapiclient\Makefile.msc" "mapiclient\Makefile"
+mapiclient-2-check:
+	$(CD) "mapiclient" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" check
+mapiclient-2-install:
+	$(CD) "mapiclient" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" install
+!IFDEF HAVE_ODBC
+HAVE_ODBC-3-all: "HAVE_ODBC-3-dir" "HAVE_ODBC-3-Makefile"
+	$(CD) "odbc" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" all 
+HAVE_ODBC-3-dir: 
+	if not exist "odbc" $(MKDIR) "odbc"
+HAVE_ODBC-3-Makefile: "$(srcdir)\odbc\Makefile.msc"
+	$(INSTALL) "$(srcdir)\odbc\Makefile.msc" "odbc\Makefile"
+HAVE_ODBC-3-check:
+	$(CD) "odbc" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" check
+HAVE_ODBC-3-install:
+	$(CD) "odbc" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" install
+!ELSE
+HAVE_ODBC-3-all:
+HAVE_ODBC-3-check:
+HAVE_ODBC-3-install:
+!ENDIF
+!IFDEF HAVE_PERL
+HAVE_PERL-4-all: "HAVE_PERL-4-dir" "HAVE_PERL-4-Makefile"
+	$(CD) "perl" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" all 
+HAVE_PERL-4-dir: 
+	if not exist "perl" $(MKDIR) "perl"
+HAVE_PERL-4-Makefile: "$(srcdir)\perl\Makefile.msc"
+	$(INSTALL) "$(srcdir)\perl\Makefile.msc" "perl\Makefile"
+HAVE_PERL-4-check:
+	$(CD) "perl" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" check
+HAVE_PERL-4-install:
+	$(CD) "perl" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" install
+!ELSE
+HAVE_PERL-4-all:
+HAVE_PERL-4-check:
+HAVE_PERL-4-install:
+!ENDIF
+php-5-all: "php-5-dir" "php-5-Makefile"
+	$(CD) "php" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" all 
+php-5-dir: 
+	if not exist "php" $(MKDIR) "php"
+php-5-Makefile: "$(srcdir)\php\Makefile.msc"
+	$(INSTALL) "$(srcdir)\php\Makefile.msc" "php\Makefile"
+php-5-check:
+	$(CD) "php" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" check
+php-5-install:
+	$(CD) "php" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" install
+!IFDEF HAVE_RUBYGEM
+HAVE_RUBYGEM-6-all: "HAVE_RUBYGEM-6-dir" "HAVE_RUBYGEM-6-Makefile"
+	$(CD) "ruby" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" all 
+HAVE_RUBYGEM-6-dir: 
+	if not exist "ruby" $(MKDIR) "ruby"
+HAVE_RUBYGEM-6-Makefile: "$(srcdir)\ruby\Makefile.msc"
+	$(INSTALL) "$(srcdir)\ruby\Makefile.msc" "ruby\Makefile"
+HAVE_RUBYGEM-6-check:
+	$(CD) "ruby" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" check
+HAVE_RUBYGEM-6-install:
+	$(CD) "ruby" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" install
+!ELSE
+HAVE_RUBYGEM-6-all:
+HAVE_RUBYGEM-6-check:
+HAVE_RUBYGEM-6-install:
+!ENDIF
+examples-7-all: "examples-7-dir" "examples-7-Makefile"
+	$(CD) "examples" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" all 
+examples-7-dir: 
+	if not exist "examples" $(MKDIR) "examples"
+examples-7-Makefile: "$(srcdir)\examples\Makefile.msc"
+	$(INSTALL) "$(srcdir)\examples\Makefile.msc" "examples\Makefile"
+examples-7-check:
+	$(CD) "examples" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" check
+examples-7-install:
+	$(CD) "examples" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" install
+!IFDEF HAVE_PYTHON2
+HAVE_PYTHON2-8-all: "HAVE_PYTHON2-8-dir" "HAVE_PYTHON2-8-Makefile"
+	$(CD) "python2" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" all 
+HAVE_PYTHON2-8-dir: 
+	if not exist "python2" $(MKDIR) "python2"
+HAVE_PYTHON2-8-Makefile: "$(srcdir)\python2\Makefile.msc"
+	$(INSTALL) "$(srcdir)\python2\Makefile.msc" "python2\Makefile"
+HAVE_PYTHON2-8-check:
+	$(CD) "python2" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" check
+HAVE_PYTHON2-8-install:
+	$(CD) "python2" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" install
+!ELSE
+HAVE_PYTHON2-8-all:
+HAVE_PYTHON2-8-check:
+HAVE_PYTHON2-8-install:
+!ENDIF
+!IFDEF HAVE_PYTHON3
+HAVE_PYTHON3-9-all: "HAVE_PYTHON3-9-dir" "HAVE_PYTHON3-9-Makefile"
+	$(CD) "python3" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" all 
+HAVE_PYTHON3-9-dir: 
+	if not exist "python3" $(MKDIR) "python3"
+HAVE_PYTHON3-9-Makefile: "$(srcdir)\python3\Makefile.msc"
+	$(INSTALL) "$(srcdir)\python3\Makefile.msc" "python3\Makefile"
+HAVE_PYTHON3-9-check:
+	$(CD) "python3" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" check
+HAVE_PYTHON3-9-install:
+	$(CD) "python3" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" install
+!ELSE
+HAVE_PYTHON3-9-all:
+HAVE_PYTHON3-9-check:
+HAVE_PYTHON3-9-install:
+!ENDIF
+!IFDEF NATIVE_WIN32
+NATIVE_WIN32-10-all: "NATIVE_WIN32-10-dir" "NATIVE_WIN32-10-Makefile"
+	$(CD) "NT" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" all 
+NATIVE_WIN32-10-dir: 
+	if not exist "NT" $(MKDIR) "NT"
+NATIVE_WIN32-10-Makefile: "$(srcdir)\NT\Makefile.msc"
+	$(INSTALL) "$(srcdir)\NT\Makefile.msc" "NT\Makefile"
+NATIVE_WIN32-10-check:
+	$(CD) "NT" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" check
+NATIVE_WIN32-10-install:
+	$(CD) "NT" && $(MAKE) /nologo $(MAKEDEBUG) "prefix=$(prefix)" "bits=$(bits)" install
+!ELSE
+NATIVE_WIN32-10-all:
+NATIVE_WIN32-10-check:
+NATIVE_WIN32-10-install:
+!ENDIF
+all-recursive: "mapilib-1-all" "mapiclient-2-all" "HAVE_ODBC-3-all" "HAVE_PERL-4-all" "php-5-all" "HAVE_RUBYGEM-6-all" "examples-7-all" "HAVE_PYTHON2-8-all" "HAVE_PYTHON3-9-all" "NATIVE_WIN32-10-all" 
+check-recursive: "mapilib-1-check" "mapiclient-2-check" "HAVE_ODBC-3-check" "HAVE_PERL-4-check" "php-5-check" "HAVE_RUBYGEM-6-check" "examples-7-check" "HAVE_PYTHON2-8-check" "HAVE_PYTHON3-9-check" "NATIVE_WIN32-10-check" 
+install-recursive: "mapilib-1-install" "mapiclient-2-install" "HAVE_ODBC-3-install" "HAVE_PERL-4-install" "php-5-install" "HAVE_RUBYGEM-6-install" "examples-7-install" "HAVE_PYTHON2-8-install" "HAVE_PYTHON3-9-install" "NATIVE_WIN32-10-install" 
+build-all: $(BUILT_SOURCES) all-recursive all-msc
+all-msc:
+check-msc: all-msc
+install-msc: install-exec install-data
+install-exec:  
+install-data:

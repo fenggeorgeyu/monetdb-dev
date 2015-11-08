@@ -1,0 +1,34 @@
+
+## Use: nmake -f makefile.msc install
+
+# Nothing much configurable below
+
+TOPDIR = .\..\..\..
+srcdir = $(TOPDIR)\..\clients\ruby\adapter
+!INCLUDE $(TOPDIR)\..\NT\rules.msc
+all: all-msc
+check: check-msc
+install: install-msc
+INCLUDES = -I$(srcdir)
+EXTRA_DIST_DIR =  active_record lib
+!IF defined(HAVE_RUBYGEM)
+activerecord-monetdb-adapter-0.1.gem: lib/active_record/connection_adapters/monetdb_adapter.rb activerecord-monetdb-adapter-0.1.gemspec
+	gem build activerecord-monetdb-adapter-0.1.gemspec
+lib\active_record\connection_adapters\monetdb_adapter.rb: "$(srcdir)\lib\active_record\connection_adapters\monetdb_adapter.rb"
+	if not exist "lib\active_record\connection_adapters" $(MKDIR) "lib\active_record\connection_adapters"
+	$(INSTALL) "$(srcdir)\lib\active_record\connection_adapters\monetdb_adapter.rb" "lib\active_record\connection_adapters\monetdb_adapter.rb"
+activerecord-monetdb-adapter-0.1.gemspec: "$(srcdir)\activerecord-monetdb-adapter-0.1.gemspec"
+	$(INSTALL) "$(srcdir)\activerecord-monetdb-adapter-0.1.gemspec" "activerecord-monetdb-adapter-0.1.gemspec"
+install_activerecord-monetdb-adapter-0.1.gemspec: "activerecord-monetdb-adapter-0.1.gem" "$(prefix)\$(RUBY_DIR)"
+	gem install "activerecord-monetdb-adapter-0.1.gem" --local --install-dir "$(prefix)\$(RUBY_DIR)" --force --rdoc
+"$(prefix)\$(RUBY_DIR)":
+	if not exist "$(prefix)\$(RUBY_DIR)" $(MKDIR) "$(prefix)\$(RUBY_DIR)"
+!ELSE
+activerecord-monetdb-adapter-0.1.gem:
+install_activerecord-monetdb-adapter-0.1.gemspec:
+!ENDIF
+all-msc: "activerecord-monetdb-adapter-0.1.gem"
+check-msc: all-msc "activerecord-monetdb-adapter-0.1.gemspec"
+install-msc: install-exec install-data
+install-exec:  "install_activerecord-monetdb-adapter-0.1.gemspec" 
+install-data:

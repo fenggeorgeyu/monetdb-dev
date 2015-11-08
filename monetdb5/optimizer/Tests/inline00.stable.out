@@ -1,0 +1,56 @@
+stdout of test 'inline00` in directory 'monetdb5/optimizer` itself:
+
+
+# 00:18:07 >  
+# 00:18:07 >  Mtimeout -timeout 60 mserver5 "--config=/ufs/mk/monet5/Linux/etc/monetdb5.conf" --debug=10 --set "monet_mod_path=/ufs/mk/monet5//Linux/lib/MonetDB5:/ufs/mk/monet5//Linux/lib/MonetDB5/lib:/ufs/mk/monet5//Linux/lib/MonetDB5/bin" --set "gdk_dbfarm=/ufs/mk/monet5//Linux/var/MonetDB5/dbfarm" --set "sql_logdir=/ufs/mk/monet5//Linux/var/MonetDB5/sql_logs" --set "xquery_logdir=/ufs/mk/monet5//Linux/var/MonetDB5/xquery_logs" --set mapi_port=31500 --set xrpc_port=46952 --set monet_prompt= --trace --dbname=mTests_src_optimizer  inline00.mal
+# 00:18:07 >  
+
+# MonetDB Server v5.0.0_beta2_1
+# Copyright (c) 1993-2007 CWI, all rights reserved
+# Compiled for x86_64-redhat-linux-gnu/64bit with 64bit OIDs dynamically linked
+# dbname:mTests_src_optimizer
+# Visit http://monetdb.cwi.nl/ for further information
+# Listening for connection requests on mapi:monetdb://eir.ins.cwi.nl:32348/
+function user.help{inline}():void;
+    b := bat.new(:oid,:int);
+    c := bat.new(:oid,:int);
+    bat.append(b,1);
+barrier (y,z) := iterator.new(b);
+    io.print(y);
+catch MALException:str;
+exit MALException:str;
+exit (y,z);
+barrier (x,z) := iterator.new(c);
+    io.print(x);
+    redo (x,z) := iterator.next(c);
+catch MALException:str;
+exit MALException:str;
+exit (x,z);
+end user.help;
+function user.qry():void;
+    user.help();
+end user.qry;
+function user.main():void;
+    mdb.List("user","qry");
+end user.main;
+function user.qry():void;               	# 
+    X_3:bat[:oid,:int] := bat.new(:oid,:int);	# CMDBATnew
+    X_6:bat[:oid,:int] := bat.new(:oid,:int);	# CMDBATnew
+    bat.append(X_3:bat[:oid,:int],1:int);	# BKCappend_val_wrap
+barrier (X_9:oid,X_10:int) := iterator.new(X_3:bat[:oid,:int]);	# ITRbunIterator
+    io.print(X_9:oid);                  	# IOprint_val
+catch MALException:str;                 	# 
+exit MALException:str;                  	# 
+exit (X_9:oid,X_10:int);                	# 
+barrier (X_13:oid,X_10:int) := iterator.new(X_6:bat[:oid,:int]);	# ITRbunIterator
+    io.print(X_13:oid);                 	# IOprint_val
+    redo (X_13:oid,X_10:int) := iterator.next(X_6:bat[:oid,:int]);	# ITRbunNext
+catch MALException:str;                 	# 
+exit MALException:str;                  	# 
+exit (X_13:oid,X_10:int);               	# 
+end user.qry;                           	# 
+
+# 00:18:07 >  
+# 00:18:07 >  Done.
+# 00:18:07 >  
+

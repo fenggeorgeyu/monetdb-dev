@@ -1,0 +1,42 @@
+stdout of test 'JPexample` in directory 'monetdb5/optimizer` itself:
+
+
+# 20:30:05 >  
+# 20:30:05 >  Mtimeout -timeout 60 mserver5 "--config=/ufs/mk/monet5/Linux/etc/MonetDB5.conf" --debug=10 --set "monet_mod_path=/ufs/mk/monet5/Linux/lib64/MonetDB5:/ufs/mk/opensource/MonetDB/Linux/lib64/MonetDB" --set "gdk_dbfarm=/ufs/mk/monet5/Linux/var/MonetDB5/dbfarm" --set "sql_logdir=/ufs/mk/monet5/Linux/var/MonetDB5/dblogs" --set mapi_port=34010 --set monet_prompt= --trace --dbname=mTests_src_optimizer  JPexample.mal < /dev/null
+# 20:30:05 >  
+
+# MonetDB Server v4.99.19
+# Copyright (c) 1993-2006 CWI, all rights reserved
+# Compiled for x86_64-redhat-linux-gnu/64bit with 64bit OIDs dynamically linked
+# config:/ufs/mk/monet5/Linux/etc/MonetDB5.conf
+# dbfarm:/ufs/mk/monet5/Linux/var/MonetDB5/dbfarm
+# dbname:mTests_src_optimizer
+# Visit http://monetdb.cwi.nl/ for further information
+# Listening for connection requests on mapi:monetdb://eir.ins.cwi.nl:32348/
+function user.main():void;
+# test the joinpath expander 
+    a := bat.new(:oid,:oid);
+    b := bat.new(:oid,:oid);
+    c := bat.new(:oid,:str);
+    j1 := algebra.leftfetchjoin(a,b);
+    j2:bat[:oid,:str]  := algebra.leftfetchjoinPath(a,b,c);
+    j3 := algebra.leftfetchjoin(b,b);
+    j4:bat[:oid,:oid] := algebra.leftfetchjoinPath(b,b,b);
+    mdb.List();
+end user.main;
+function user.main():void;              	# 
+# test the joinpath expander            	# 
+    a:bat[:oid,:oid] := bat.new(:oid,:oid);	# CMDBATnew
+    b:bat[:oid,:oid] := bat.new(:oid,:oid);	# CMDBATnew
+    c:bat[:oid,:str] := bat.new(:oid,:str);	# CMDBATnew
+    j1:bat[:oid,:oid] := algebra.leftfetchjoin(a:bat[:oid,:oid],b:bat[:oid,:oid]);	# ALGleftfetchjoin
+    j2:bat[:oid,:str] := algebra.leftfetchjoinPath(a:bat[:oid,:oid],b:bat[:oid,:oid],c:bat[:oid,:str]);	# ALGjoinPath
+    j3:bat[:oid,:oid] := algebra.leftfetchjoin(b:bat[:oid,:oid],b:bat[:oid,:oid]);	# ALGleftfetchjoin
+    j4:bat[:oid,:oid] := algebra.leftfetchjoinPath(b:bat[:oid,:oid],b:bat[:oid,:oid],b:bat[:oid,:oid]);	# ALGjoinPath
+    mdb.List();                         	# MDBlistDetail
+end user.main;                          	# 
+
+# 20:30:05 >  
+# 20:30:05 >  Done.
+# 20:30:05 >  
+

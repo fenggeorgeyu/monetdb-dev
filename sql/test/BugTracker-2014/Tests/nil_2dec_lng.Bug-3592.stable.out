@@ -1,0 +1,125 @@
+stdout of test 'nil_2dec_lng.Bug-3592` in directory 'sql/test/BugTracker-2014` itself:
+
+
+# 23:28:04 >  
+# 23:28:04 >  "mserver5" "--debug=10" "--set" "gdk_nr_threads=0" "--set" "mapi_open=true" "--set" "mapi_port=38459" "--set" "mapi_usock=/var/tmp/mtest-19113/.s.monetdb.38459" "--set" "monet_prompt=" "--forcemito" "--set" "mal_listing=2" "--dbpath=/export/scratch1/mk/Oct2014//Linux/var/MonetDB/mTests_sql_test_BugTracker-2014" "--set" "mal_listing=0" "--set" "embedded_r=yes"
+# 23:28:04 >  
+
+# MonetDB 5 server v11.19.0
+# This is an unreleased version
+# Serving database 'mTests_sql_test_BugTracker-2014', using 8 threads
+# Compiled for x86_64-unknown-linux-gnu/64bit with 64bit OIDs dynamically linked
+# Found 15.590 GiB available main-memory.
+# Copyright (c) 1993-July 2008 CWI.
+# Copyright (c) August 2008-2015 MonetDB B.V., all rights reserved
+# Visit http://www.monetdb.org/ for further information
+# Listening for connection requests on mapi:monetdb://vienna.ins.cwi.nl:38459/
+# Listening for UNIX domain connection requests on mapi:monetdb:///var/tmp/mtest-19113/.s.monetdb.38459
+# MonetDB/GIS module loaded
+# MonetDB/SQL module loaded
+# MonetDB/R   module loaded
+
+Ready.
+
+# 23:28:04 >  
+# 23:28:04 >  "mclient" "-lsql" "-ftest" "-Eutf-8" "-i" "-e" "--host=/var/tmp/mtest-19113" "--port=38459"
+# 23:28:04 >  
+
+#create table foo_nil_2dec (t timestamp,v decimal(18,9));
+#insert into foo_nil_2dec values (now(),42);
+[ 1	]
+#insert into foo_nil_2dec values (now(),43);
+[ 1	]
+#select (t-(select timestamp '1970-1-1')),v from foo_nil_2dec union all select (t-(select timestamp '1970-1-1')),null from foo_nil_2dec;
+% .L5,	.L5 # table_name
+% L2,	v # name
+% sec_interval,	decimal # type
+% 14,	20 # length
+[ 1412467200.000,	42.000000000	]
+[ 1412467200.000,	43.000000000	]
+[ 1412467200.000,	NULL	]
+[ 1412467200.000,	NULL	]
+#explain select (t-(select timestamp '1970-1-1')),v from foo_nil_2dec union all select (t-(select timestamp '1970-1-1')),null from foo_nil_2dec;
+% .explain # table_name
+% mal # name
+% clob # type
+% 206 # length
+function user.s5_1{autoCommit=true}(A0:timestamp,A1:timestamp,A2:void):void;
+    X_64:void := querylog.define("explain select (t-(select timestamp \\'1970-1-1\\')),v from foo_nil_2dec union all select (t-(select timestamp \\'1970-1-1\\')),null from foo_nil_2dec;","default_pipe",74);
+barrier X_129 := language.dataflow();
+    X_41 := bat.new(nil:oid,nil:str);
+    X_48 := bat.append(X_41,".L5");
+    X_57 := bat.append(X_48,".L5");
+    X_43 := bat.new(nil:oid,nil:str);
+    X_50 := bat.append(X_43,"L2");
+    X_58 := bat.append(X_50,"v");
+    X_44 := bat.new(nil:oid,nil:str);
+    X_52 := bat.append(X_44,"sec_interval");
+    X_60 := bat.append(X_52,"decimal");
+    X_45 := bat.new(nil:oid,nil:int);
+    X_54 := bat.append(X_45,13);
+    X_62 := bat.append(X_54,18);
+    X_47 := bat.new(nil:oid,nil:int);
+    X_56 := bat.append(X_47,0);
+    X_63 := bat.append(X_56,9);
+    X_6:bat[:oid,:lng]  := bat.new(nil:oid,nil:lng);
+    X_5 := sql.mvc();
+    X_80:bat[:oid,:oid] := sql.tid(X_5,"sys","foo_nil_2dec",0,2);
+    X_83:bat[:oid,:timestamp] := sql.bind(X_5,"sys","foo_nil_2dec","t",0,0,2);
+    (X_85:bat[:oid,:oid],X_86:bat[:oid,:timestamp]) := sql.bind(X_5,"sys","foo_nil_2dec","t",2,0,2);
+    X_95 := sql.delta(X_83,X_85,X_86);
+    X_97 := algebra.leftfetchjoin(X_80,X_95);
+    X_16 := calc.timestamp(A0,7);
+    X_99 := algebra.project(X_97,X_16);
+    X_101 := batmtime.diff(X_97,X_99);
+    X_82:bat[:oid,:oid] := sql.tid(X_5,"sys","foo_nil_2dec",1,2);
+    X_84:bat[:oid,:timestamp] := sql.bind(X_5,"sys","foo_nil_2dec","t",0,1,2);
+    (X_87:bat[:oid,:oid],X_88:bat[:oid,:timestamp]) := sql.bind(X_5,"sys","foo_nil_2dec","t",2,1,2);
+    X_14:bat[:oid,:timestamp] := sql.bind(X_5,"sys","foo_nil_2dec","t",1);
+    X_96 := sql.delta(X_84,X_87,X_88,X_14);
+    X_98 := algebra.leftfetchjoin(X_82,X_96);
+    X_100 := algebra.project(X_98,X_16);
+    X_102 := batmtime.diff(X_98,X_100);
+    X_115 := mat.packIncrement(X_101,2);
+    X_18:bat[:oid,:lng] := mat.packIncrement(X_115,X_102);
+    X_19 := bat.append(X_6,X_18,true);
+    X_20 := calc.timestamp(A1,7);
+    X_105 := algebra.project(X_97,X_20);
+    X_107 := batmtime.diff(X_97,X_105);
+    X_106 := algebra.project(X_98,X_20);
+    X_108 := batmtime.diff(X_98,X_106);
+    X_117 := mat.packIncrement(X_107,2);
+    X_21:bat[:oid,:lng] := mat.packIncrement(X_117,X_108);
+    X_22 := bat.append(X_19,X_21,true);
+    X_24:bat[:oid,:lng]  := bat.new(nil:oid,nil:lng);
+    X_89:bat[:oid,:lng] := sql.bind(X_5,"sys","foo_nil_2dec","v",0,0,2);
+    (X_91:bat[:oid,:oid],X_92:bat[:oid,:lng]) := sql.bind(X_5,"sys","foo_nil_2dec","v",2,0,2);
+    X_109 := sql.delta(X_89,X_91,X_92);
+    X_111 := algebra.leftfetchjoin(X_80,X_109);
+    X_90:bat[:oid,:lng] := sql.bind(X_5,"sys","foo_nil_2dec","v",0,1,2);
+    (X_93:bat[:oid,:oid],X_94:bat[:oid,:lng]) := sql.bind(X_5,"sys","foo_nil_2dec","v",2,1,2);
+    X_32:bat[:oid,:lng]  := sql.bind(X_5,"sys","foo_nil_2dec","v",1);
+    X_110 := sql.delta(X_90,X_93,X_94,X_32);
+    X_112 := algebra.leftfetchjoin(X_82,X_110);
+    X_119 := mat.packIncrement(X_111,2);
+    X_34 := mat.packIncrement(X_119,X_112);
+    X_35 := bat.append(X_24,X_34,true);
+    X_113 := algebra.project(X_107,nil:lng);
+    X_114 := algebra.project(X_108,nil:lng);
+    X_121 := mat.packIncrement(X_113,2);
+    X_38 := mat.packIncrement(X_121,X_114);
+    X_39 := bat.append(X_35,X_38,true);
+    language.pass(X_97);
+    language.pass(X_98);
+    language.pass(X_80);
+    language.pass(X_82);
+    language.pass(X_107);
+    language.pass(X_108);
+exit X_129;
+    sql.resultSet(X_57,X_58,X_60,X_62,X_63,X_22,X_39);
+end user.s5_1;
+
+# 23:28:04 >  
+# 23:28:04 >  "Done."
+# 23:28:04 >  
+

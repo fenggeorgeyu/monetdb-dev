@@ -1,0 +1,101 @@
+stdout of test 'partition` in directory 'monetdb5/modules/mal` itself:
+
+
+# 16:35:42 >  
+# 16:35:42 >   mserver5 "--config=/ufs/mk/monet5//Linux/etc/monetdb5.conf" --debug=10 --set gdk_nr_threads=0 --set "monet_mod_path=/ufs/mk/monet5//Linux/lib/MonetDB5:/ufs/mk/monet5//Linux/lib/MonetDB5/lib:/ufs/mk/monet5//Linux/lib/MonetDB5/bin" --set "gdk_dbfarm=/ufs/mk/monet5//Linux/var/MonetDB5/dbfarm" --set "sql_logdir=sql_logs"   --set mapi_open=true --set xrpc_open=true --set mapi_port=34622 --set xrpc_port=40864 --set monet_prompt= --trace  --dbname=mTests_src_modules_mal  partition.mal
+# 16:35:42 >  
+
+# MonetDB server v5.11.0, based on kernel v1.29.0
+# Serving database 'mTests_src_modules_mal', using 4 threads
+# Compiled for x86_64-unknown-linux-gnu/64bit with 64bit OIDs dynamically linked
+# Copyright (c) 1993-July 2008 CWI.
+# Copyright (c) August 2008-2009 MonetDB B.V., all rights reserved
+# Visit http://monetdb.cwi.nl/ for further information
+# Listening for connection requests on mapi:monetdb://eir.ins.cwi.nl:33621/
+function user.tst():void;
+    b := bat.new(:oid,:int);
+    bat.append(b,1);
+    bat.append(b,2);
+    bat.append(b,3);
+    bat.append(b,4);
+    bat.append(b,5);
+    c := bat.partition(b,2,0);
+    io.print(c);
+    d := bat.partition(b,2,1);
+    io.print(d);
+    (b1,b2) := bat.partition(b);
+    io.print(b1);
+    io.print(b2);
+    b3 := bat.partition(b);
+    io.print(b3);
+    e := bat.partition(b,2,-1);
+    io.print(e);
+end user.tst;
+function user.main():void;
+    mdb.List("user","tst");
+    user.tst();
+end user.main;
+function user.tst():void;               	# 
+    b:bat[:oid,:int] := bat.new(:oid,:int);	# CMDBATnew
+    bat.append(b:bat[:oid,:int],1:int); 	# BKCappend_val_wrap
+    bat.append(b:bat[:oid,:int],2:int); 	# BKCappend_val_wrap
+    bat.append(b:bat[:oid,:int],3:int); 	# BKCappend_val_wrap
+    bat.append(b:bat[:oid,:int],4:int); 	# BKCappend_val_wrap
+    bat.append(b:bat[:oid,:int],5:int); 	# BKCappend_val_wrap
+    c:bat[:oid,:int] := bat.partition(b:bat[:oid,:int],2:int,0:int);	# CMDBATpartition2
+    io.print(c:bat[:oid,:int]);         	# IOprint_val
+    d:bat[:oid,:int] := bat.partition(b:bat[:oid,:int],2:int,1:int);	# CMDBATpartition2
+    io.print(d:bat[:oid,:int]);         	# IOprint_val
+    (b1:bat[:oid,:int],b2:bat[:oid,:int]) := bat.partition(b:bat[:oid,:int]);	# CMDBATpartition
+    io.print(b1:bat[:oid,:int]);        	# IOprint_val
+    io.print(b2:bat[:oid,:int]);        	# IOprint_val
+    b3:bat[:oid,:int] := bat.partition(b:bat[:oid,:int]);	# CMDBATpartition
+    io.print(b3:bat[:oid,:int]);        	# IOprint_val
+# an error should be produced           	# 
+    e:bat[:oid,:int] := bat.partition(b:bat[:oid,:int],2:int,-1:int);	# CMDBATpartition2
+    io.print(e:bat[:oid,:int]);         	# IOprint_val
+end user.tst;                           	# 
+#--------------------------#
+# h	t	  # name
+# void	int	  # type
+#-----------------#
+[ 0@0,	  1	  ]
+[ 1@0,	  2	  ]
+#-----------------#
+# h	t	  # name
+# void	int	  # type
+#-----------------#
+[ 2@0,	  3	  ]
+[ 3@0,	  4	  ]
+[ 4@0,	  5	  ]
+#-----------------#
+# h	t	  # name
+# void	int	  # type
+#-----------------#
+[ 0@0,	  1	  ]
+[ 1@0,	  2	  ]
+[ 2@0,	  3	  ]
+#-----------------#
+# h	t	  # name
+# void	int	  # type
+#-----------------#
+[ 3@0,	  4	  ]
+[ 4@0,	  5	  ]
+#-----------------#
+# h	t	  # name
+# void	int	  # type
+#-----------------#
+[ 0@0,	  1	  ]
+[ 1@0,	  2	  ]
+[ 2@0,	  3	  ]
+[ 3@0,	  4	  ]
+[ 4@0,	  5	  ]
+!MALException:bat.partition:Illegal argument Illegal piece index
+
+
+
+
+# 16:35:42 >  
+# 16:35:42 >  Done.
+# 16:35:42 >  
+

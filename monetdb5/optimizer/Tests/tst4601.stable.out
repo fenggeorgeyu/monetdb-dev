@@ -1,0 +1,59 @@
+stdout of test 'tst4601` in directory 'monetdb5/optimizer` itself:
+
+
+# 19:36:04 >  
+# 19:36:04 >  Mtimeout -timeout 60 mserver5 "--config=/ufs/mk/monet5/Linux/etc/MonetDB5.conf" --debug=10 --set "monet_mod_path=/ufs/mk/monet5/Linux/lib/MonetDB5:/ufs/mk/opensource/MonetDB/Linux/lib/MonetDB" --set "gdk_dbfarm=/ufs/mk/monet5/Linux/var/MonetDB5/dbfarm" --set "sql_logdir=/ufs/mk/monet5/Linux/var/MonetDB5/dblogs" --set mapi_port=31892 --set monet_prompt= --trace --dbname=mTests_src_optimizer  tst4601.mal < /dev/null
+# 19:36:04 >  
+
+# MonetDB Server v4.99.19
+# Copyright (c) 1993-2006 CWI, all rights reserved
+# Compiled for x86_64-redhat-linux-gnu/64bit with 64bit OIDs dynamically linked
+# config:/ufs/mk/monet5/Linux/etc/MonetDB5.conf
+# dbfarm:/ufs/mk/monet5/Linux/var/MonetDB5/dbfarm
+# dbname:mTests_src_optimizer
+# Visit http://monetdb.cwi.nl/ for further information
+# Listening for connection requests on mapi:monetdb://eir.ins.cwi.nl:32348/
+function user.welcome(lim:int):int;
+    i := 0;
+barrier j := calc.<(i,lim);
+    io.print("Welcome");
+    i := calc.+(i,1);
+    redo j := calc.<(i,lim);
+exit j;
+    return welcome := i;
+end user.welcome;
+function user.main():void;
+# the first test for macro expansions and inversions 
+    io.print("test expansion");
+    X_13 := 0;
+barrier X_15 := calc.<(X_13,2);
+    io.print("Welcome");
+    X_13 := calc.+(X_13,1);
+    redo X_15 := calc.<(X_13,2);
+exit X_15;
+    a := X_13;
+    io.print(a);
+    mdb.List();
+end user.main;
+[ "test expansion" ]
+[ "Welcome" ]
+[ "Welcome" ]
+[ 2 ]
+function user.main():void;              	# 
+# the first test for macro expansions and inversions 	# 
+    io.print("test expansion":str);     	# IOprint_val
+    X_13:int := 0:int;                  	# 
+barrier X_15:bit := calc.<(X_13:int,2:int);	# CMDvarLT
+    io.print("Welcome":str);            	# IOprint_val
+    X_13:int := calc.+(X_13:int,1:int); 	# CMDvarADDsignal
+    redo X_15:bit := calc.<(X_13:int,2:int);	# CMDvarLT
+exit X_15:bit;                          	# 
+    a:int := X_13:int;                  	# 
+    io.print(a:int);                    	# IOprint_val
+    mdb.List();                         	# MDBlistDetail
+end user.main;                          	# 
+
+# 19:36:05 >  
+# 19:36:05 >  Done.
+# 19:36:05 >  
+

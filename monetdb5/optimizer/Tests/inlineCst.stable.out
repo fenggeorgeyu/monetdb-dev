@@ -1,0 +1,50 @@
+stdout of test 'inlineCst` in directory 'monetdb5/optimizer` itself:
+
+
+# 20:07:33 >  
+# 20:07:33 >   mserver5 "--config=/ufs/mk/monet5/Linux/etc/monetdb5.conf" --debug=10 --set "monet_mod_path=/ufs/mk/monet5//Linux/lib/MonetDB5:/ufs/mk/monet5//Linux/lib/MonetDB5/lib:/ufs/mk/monet5//Linux/lib/MonetDB5/bin" --set "gdk_dbfarm=/ufs/mk/monet5//Linux/var/MonetDB5/dbfarm" --set "sql_logdir=/ufs/mk/monet5//Linux/var/MonetDB5/sql_logs"  --set mapi_open=true --set xrpc_open=true --set mapi_port=33414 --set xrpc_port=46798 --set monet_prompt= --trace --dbname=mTests_src_optimizer  inlineCst.mal
+# 20:07:33 >  
+
+# MonetDB server v5.3.0, based on kernel v1.21.0
+# Serving database 'mTests_src_optimizer'
+# Compiled for x86_64-redhat-linux-gnu/64bit with 64bit OIDs dynamically linked
+# Copyright (c) 1993-2007 CWI, all rights reserved
+# Visit http://monetdb.cwi.nl/ for further information
+# Listening for connection requests on mapi:monetdb://eir.ins.cwi.nl:32348/
+function user.foo{inline}(b:int):int;
+    i := 213;
+    return foo := i;
+end user.foo;
+function user.qry():void;
+    b := bat.new(:oid,:int);
+    bat.append(b,1);
+    bat.append(b,10);
+    bat.append(b,20);
+    r:bat[:oid,:int]  := mal.multiplex("user","foo",b);
+    io.print(r);
+end user.qry;
+function user.main():void;
+    user.qry();
+    mdb.List("user","qry");
+end user.main;
+#--------------------------#
+# h	t	  # name
+# void	int	  # type
+#-----------------#
+[ 0@0,	  213	  ]
+[ 1@0,	  213	  ]
+[ 2@0,	  213	  ]
+function user.qry():void;               	# 
+    b:bat[:oid,:int] := bat.new(:oid,:int);	# CMDBATnew
+    bat.append(b:bat[:oid,:int],1:int); 	# BKCappend_val_wrap
+    bat.append(b:bat[:oid,:int],10:int);	# BKCappend_val_wrap
+    bat.append(b:bat[:oid,:int],20:int);	# BKCappend_val_wrap
+    X_16:int := 213:int;                	# 
+    r:bat[:oid,:int]{inline} := algebra.project(b:bat[:oid,:int],X_16:int);	# ALGprojecttail
+    io.print(r:bat[:oid,:int]);         	# IOprint_val
+end user.qry;                           	# 
+
+# 20:07:33 >  
+# 20:07:33 >  Done.
+# 20:07:33 >  
+

@@ -1,0 +1,5 @@
+x := bat.new(:oid,:int);
+tt:= inspect.getType(x); io.print(tt);
+
+s:= "hello";
+st:= inspect.getType(s); io.print(st);

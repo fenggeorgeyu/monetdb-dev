@@ -1,0 +1,46 @@
+stdout of test 'inline02` in directory 'monetdb5/optimizer` itself:
+
+
+# 18:00:43 >  
+# 18:00:43 >   mserver5 "--config=/ufs/mk/monet5/Linux/etc/monetdb5.conf" --debug=10 --set "monet_mod_path=/ufs/mk/monet5//Linux/lib/MonetDB5:/ufs/mk/monet5//Linux/lib/MonetDB5/lib:/ufs/mk/monet5//Linux/lib/MonetDB5/bin" --set "gdk_dbfarm=/ufs/mk/monet5//Linux/var/MonetDB5/dbfarm" --set "sql_logdir=/ufs/mk/monet5//Linux/var/MonetDB5/sql_logs"  --set mapi_open=true --set xrpc_open=true --set mapi_port=34223 --set xrpc_port=43286 --set monet_prompt= --trace --dbname=mTests_src_optimizer  inline02.mal
+# 18:00:43 >  
+
+# MonetDB server v5.3.0, based on kernel v1.21.0
+# Serving database 'mTests_src_optimizer'
+# Compiled for x86_64-redhat-linux-gnu/64bit with 64bit OIDs dynamically linked
+# Copyright (c) 1993-2007 CWI, all rights reserved
+# Visit http://monetdb.cwi.nl/ for further information
+# Listening for connection requests on mapi:monetdb://eir.ins.cwi.nl:32348/
+function user.foo{inline}(a:int,b:int):int;
+    c := calc.+(a,b);
+    return foo := c;
+end user.foo;
+function user.qry():void;
+    b := bat.new(:oid,:int);
+    bat.append(b,1);
+    zz := user.foo(1,2);
+# base line test for inlining 
+    z:bat[:oid,:int]  := mal.multiplex("user","foo",b,b);
+    z:bat[:oid,:int]  := mal.multiplex("user","foo",b,2);
+end user.qry;
+function user.main():void;
+# remapping inline functions 
+# inspired by SQL module 
+    mdb.List("user","qry");
+end user.main;
+function user.qry():void;               	# 
+    b:bat[:oid,:int] := bat.new(:oid,:int);	# CMDBATnew
+    bat.append(b:bat[:oid,:int],1:int); 	# BKCappend_val_wrap
+    X_15:int := calc.+(1:int,2:int);    	# CMDvarADDsignal
+    zz:int := X_15:int;                 	# 
+# base line test for inlining           	# 
+    X_19:bat[:oid,:int] := batcalc.+(b:bat[:oid,:int],b:bat[:oid,:int]);	# CMDbatADDsignal
+    z:bat[:oid,:int]{inline} := X_19:bat[:oid,:int];	# 
+    X_23:bat[:oid,:int] := batcalc.+(b:bat[:oid,:int],2:int);	# CMDbatADDsignal
+    z:bat[:oid,:int]{inline} := X_23:bat[:oid,:int];	# 
+end user.qry;                           	# 
+
+# 18:00:43 >  
+# 18:00:43 >  Done.
+# 18:00:43 >  
+
